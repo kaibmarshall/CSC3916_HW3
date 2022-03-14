@@ -9,9 +9,9 @@ chai.should();
 chai.use(chaiHttp);
 
 let login_details = {
-    name: 'test',
-    username: 'email@email.com',
-    password: '123@abc'
+    name: 'Test',
+    username: 'testUser',
+    password: 'test'
 }
 
 let movie_request = {
@@ -32,7 +32,7 @@ let movie_request = {
     }
 }
 
-describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth', () => {
+describe('Login and Call Test Collection with Basic Auth and JWT Auth', () => {
    beforeEach((done) => { //Before each test initialize the database to empty
        //db.userList = [];
 
@@ -48,16 +48,8 @@ describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth'
     })
 
     //Test the GET route
-    describe('/signup', () => {
-        it('it should register, login and check our token', (done) => {
-          chai.request(server)
-              .post('/signup')
-              .send(login_details)
-              .end((err, res) =>{
-                console.log(JSON.stringify(res.body));
-                res.should.have.status(200);
-                res.body.success.should.be.eql(true);
-                //follow-up to get the JWT token
+    describe('/signin', () => {
+        it('it should login successfully', (done) => {
                 chai.request(server)
                     .post('/signin')
                     .send(login_details)
@@ -72,18 +64,45 @@ describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth'
         })
     });
 
-    describe('/movies', () => {
-        it('Should make a movie', (done) => {
+    // describe('/movies', () => {
+    //     it('Should make a movie', (done) => {
+    //         chai.request(server)
+    //             .post('/movies')
+    //             .send(movie_request)
+    //             .end((err, res) =>{
+    //                 console.log(JSON.stringify(res.body));
+    //                 res.should.have.status(200);
+    //                 res.body.success.should.be.eql(true);
+    //                 done();
+    //             })
+    //     })
+    // });
+
+    // describe('/movies', () => {
+    //     it('Should get all movies', (done) => {
+    //         chai.request(server)
+    //             .get('/movies')
+    //             .send(movie_request)
+    //             .end((err, res) => {
+    //                 console.log(JSON.stringify(res.body));
+    //                 res.should.have.status(200);
+    //                 done();
+    //             })
+    //     })
+    // });
+
+    describe('/movies/:movie', () => {
+        it('Should find the movie called movie', (done) => {
             chai.request(server)
-                .post('/movies')
-                .send(movie_request)
-                .end((err, res) =>{
+                .get('/movies/:movie')
+                .end((err, res) => {
                     console.log(JSON.stringify(res.body));
                     res.should.have.status(200);
-                    res.body.success.should.be.eql(true);
                     done();
                 })
         })
     });
 
-});
+
+
+

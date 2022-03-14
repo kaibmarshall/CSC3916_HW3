@@ -12,8 +12,8 @@ var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
-var Movie = require('./Movies')
-var Actor = require('./Actors')
+var Movie = require('./Movies');
+var Actor = require('./Actors');
 
 var app = express();
 app.use(cors());
@@ -87,10 +87,8 @@ router.post('/signin', function (req, res) {
     })
 });
 
-
-
 router.route('/movies')
-    .delete(authController.isAuthenticated, function(req, res) {
+    .delete(authJwtController.isAuthenticated, function(req, res) {
             console.log(req.body);
             res = res.status(404);
             if (req.get('Content-Type')) {
@@ -108,16 +106,14 @@ router.route('/movies')
             res.json( {status: 404,  message: 'FAIL', headers: req.headers,  query: req.body.query, env: process.env.UNIQUE_KEY } );
         }
     )
-    .get(function(req, res) {
-            console.log(req.body);
-            res = res.status(200);
-            if (req.get('Content-Type')) {
-                res = res.type(req.get('Content-Type'));
-            }
-            res.json( {status: 200,  message: 'GET movies', headers: req.headers,  query: req.body.query, env: process.env.UNIQUE_KEY } );
+    .get(authJwtController.isAuthenticated,function(req, res) {
+            Movie.find({}, function(err, movies) {
+            if (err) throw err;
+            res.status(200).send(movies)
+            });
         }
     )
-    .post(function(req, res) {
+    .post(authJwtController.isAuthenticated, function(req, res) {
         var movieNew = new Movie();
         var actorNew1 = new Actor();
         var actorNew2 = new Actor();
@@ -160,6 +156,29 @@ router.route('/movies')
 
         res.json({success: true, msg: 'Successfully created new movie.'});
         });
+
+router.route('/movies/:movieparam')
+    .delete(authJwtController.isAuthenticated, function(req, res) {
+        Movie.deleteOne({title : req.params.movieparam}).exec(function (err){
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.status(200).send({success: true, msg: "Movie Deleted"});
+            }
+        })
+    })
+    .get(authJwtController.isAuthenticated, function(req, res) {
+        var movieParam = req.params.movieparam.replace(":", "");
+        Movie.findOne({title:movieParam}).exec(function ( err, movie){
+            if (err){
+                res.send(err);
+            }
+            else {
+                res.status(200).send(movie);
+            }
+        })
+})
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
