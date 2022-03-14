@@ -1,5 +1,5 @@
 /*
-CSC3916 HW2
+CSC3916 HW3
 File: Server.js
 Description: Web API scaffolding for Movie API
  */
@@ -12,6 +12,8 @@ var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
+var Movie = require('./Movies')
+var Actor = require('./Actors')
 
 var app = express();
 app.use(cors());
@@ -84,6 +86,80 @@ router.post('/signin', function (req, res) {
         })
     })
 });
+
+
+
+router.route('/movies')
+    .delete(authController.isAuthenticated, function(req, res) {
+            console.log(req.body);
+            res = res.status(404);
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+            res.json( {status: 404,  message: 'FAIL', headers: req.headers,  query: req.body.query, env: process.env.UNIQUE_KEY } );
+        }
+    )
+    .put(authJwtController.isAuthenticated, function(req, res) {
+            console.log(req.body);
+            res = res.status(404);
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+            res.json( {status: 404,  message: 'FAIL', headers: req.headers,  query: req.body.query, env: process.env.UNIQUE_KEY } );
+        }
+    )
+    .get(function(req, res) {
+            console.log(req.body);
+            res = res.status(200);
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+            res.json( {status: 200,  message: 'GET movies', headers: req.headers,  query: req.body.query, env: process.env.UNIQUE_KEY } );
+        }
+    )
+    .post(function(req, res) {
+        var movieNew = new Movie();
+        var actorNew1 = new Actor();
+        var actorNew2 = new Actor();
+        var actorNew3 = new Actor();
+        var actorArray = [actorNew1, actorNew2, actorNew3];
+
+        actorNew1.actorName = req.body.actor1.actorName;
+        actorNew1.characterName = req.body.actor1.characterName;
+
+        actorNew2.actorName = req.body.actor2.actorName;
+        actorNew2.characterName = req.body.actor2.characterName;
+
+        actorNew3.actorName = req.body.actor3.actorName;
+        actorNew3.characterName = req.body.actor3.characterName;
+
+        movieNew.title = req.body.title;
+        movieNew.year = req.body.year;
+        movieNew.genre = req.body.genre;
+        movieNew.actors = actorArray;
+
+        movieNew.save(function(err){
+            if (err)
+                return res.json(err);
+        })
+
+        actorNew1.save(function(err){
+            if (err)
+                return res.json(err);
+        })
+
+        actorNew2.save(function(err){
+            if (err)
+                return res.json(err);
+        })
+
+        actorNew3.save(function(err){
+            if (err)
+                return res.json(err);
+        })
+
+        res.json({success: true, msg: 'Successfully created new movie.'});
+        });
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);

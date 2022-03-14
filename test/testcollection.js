@@ -14,6 +14,24 @@ let login_details = {
     password: '123@abc'
 }
 
+let movie_request = {
+    title: 'movie',
+    year: '1900',
+    genre: 'Action',
+    actor1: {
+        actorName: "Bo Burnham",
+        characterName: "Zac Stone"
+    },
+    actor2: {
+        actorName: "Johnny Depp",
+        characterName: "Jack Sparrow"
+    },
+    actor3: {
+        actorName: "Zendaya",
+        characterName: "MJ"
+    }
+}
+
 describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth', () => {
    beforeEach((done) => { //Before each test initialize the database to empty
        //db.userList = [];
@@ -51,6 +69,20 @@ describe('Register, Login and Call Test Collection with Basic Auth and JWT Auth'
                         done();
                     })
               })
+        })
+    });
+
+    describe('/movies', () => {
+        it('Should make a movie', (done) => {
+            chai.request(server)
+                .post('/movies')
+                .send(movie_request)
+                .end((err, res) =>{
+                    console.log(JSON.stringify(res.body));
+                    res.should.have.status(200);
+                    res.body.success.should.be.eql(true);
+                    done();
+                })
         })
     });
 
