@@ -160,7 +160,7 @@ router.route('/movies')
 router.route('/movies/:movieparam')
     .delete(authJwtController.isAuthenticated, function(req, res) {
         var movieParam = req.params.movieparam.replace(":", "");
-        Movie.findOneAndDelete({title:movieParam}).exec(function ( err, movie){
+        Movie.findOneAndDelete({title:movieParam}).exec(function ( err){
             if (err) {
                 res.send(err);
             }
@@ -179,7 +179,27 @@ router.route('/movies/:movieparam')
                 res.status(200).send(movie);
             }
         })
-})
+    })
+    .put(authJwtController.isAuthenticated, function(req, res) {
+        var movieParam = req.params.movieparam.replace(":", "");
+        Movie.updateOne({title:movieParam}, {$set: {title:"BIGMOVIE"}}).exec(function ( err){
+            if (err){
+                res.send(err);
+            }
+            else {
+                res.status(200).send({success: true, msg: "Movie title updated to: BIGMOVIE"});
+            }
+        })
+    })
+    .post(authJwtController.isAuthenticated, function(req, res) {
+            console.log(req.body);
+            res = res.status(404);
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+            res.json( {status: 404,  message: 'FAIL', headers: req.headers,  query: req.body.query, env: process.env.UNIQUE_KEY } );
+        }
+    );
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
