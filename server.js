@@ -159,7 +159,8 @@ router.route('/movies')
 
 router.route('/movies/:movieparam')
     .delete(authJwtController.isAuthenticated, function(req, res) {
-        Movie.deleteOne({title : req.params.movieparam}).exec(function (err){
+        var movieParam = req.params.movieparam.replace(":", "");
+        Movie.findOneAndDelete({title:movieParam}).exec(function ( err, movie){
             if (err) {
                 res.send(err);
             }
