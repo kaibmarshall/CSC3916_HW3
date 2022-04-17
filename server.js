@@ -180,16 +180,18 @@ router.route('/movies/:movieparam')
 
                 if (req.query.reviews === "true"){
                 //TODO Return movie with its review
-                    Review.aggregate([
+                    var movie_with_reviews = Review.aggregate([
                         {
                         $match:
                             {
                                 movieID: movie._id
                             }
-                    }]).toArray((err, resp) => {
-                        if (err) res.send({ error: err.message });
-                        if (resp.length) res.json(resp)
-                        res.send({ data: 'No docs found' })
+                    }])
+                    movie_with_reviews.toArray((error, result) => {
+                        if(error) {
+                            return res.status(500).send(error);
+                        }
+                        res.status(200).send(result);
                     });
                 }
                 else {
