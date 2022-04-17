@@ -1,5 +1,5 @@
 /*
-CSC3916 HW3
+CSC3916 HW4
 File: Server.js
 Description: Web API scaffolding for Movie API
  */
@@ -14,6 +14,7 @@ var cors = require('cors');
 var User = require('./Users');
 var Movie = require('./Movies');
 var Actor = require('./Actors');
+var Review = require('./Reviews')
 
 var app = express();
 app.use(cors());
@@ -176,7 +177,21 @@ router.route('/movies/:movieparam')
                 res.send(err);
             }
             else {
-                res.status(200).send(movie);
+
+                if (req.query.reviews === "true"){
+                //TODO Return movie with its review
+                    let movie_with_reviews = Review.aggregate([
+                        {
+                        $match:
+                            {
+                                movieID: movie._id
+                            }
+                    }])
+                    res.status(200).send(movie_with_reviews)
+                }
+                else {
+                    res.status(200).send(movie);
+                }
             }
         })
     })
@@ -200,6 +215,44 @@ router.route('/movies/:movieparam')
             res.json( {status: 404,  message: 'FAIL', headers: req.headers,  query: req.body.query, env: process.env.UNIQUE_KEY } );
         }
     );
+
+router.route('/reviews')
+    .get(function(req, res) {
+        //TODO Return all movies and their reviews
+        let movies = Movie.aggregate([
+            {
+                $lookup:
+                    {
+                        from: "Review",
+                        localField: "_id",
+                        foreignField: "movieID",
+                        as: "movies._reviews"
+                    }
+            }])
+        res.status(200).send(movies)
+    })
+    .post(authJwtController.isAuthenticated, function(req, res) {
+        Movie.findOne({title:req.body.movieTitle}).exec(function ( err, movie){
+            if (err) {
+                res.send(err);
+            }
+            else {
+                var newReview = new Review();
+                newReview.reviewerUsername = req.body.username;
+                newReview.comment = req.body.comment;
+                newReview.rating = req.body.rating;
+                newReview.movieID = movie._id;
+
+                newReview.save(function(err){
+                    if (err)
+                        return res.json(err);
+                })
+                res.json({success: true, msg: 'Successfully created new review.'});
+            }
+
+        })
+        //TODO Add review to movie (from authenticated user)
+    });
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
