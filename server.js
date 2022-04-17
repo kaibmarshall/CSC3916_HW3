@@ -184,7 +184,7 @@ router.route('/movies/:movieparam')
                         {
                         $match:
                             {
-                                movieID: movie._id
+                                "movieID": movie._id
                             }
                     }]).toArray()
                     res.status(200).send(JSON.stringify(movie_with_reviews));
