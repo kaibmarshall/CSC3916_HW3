@@ -15,6 +15,7 @@ var User = require('./Users');
 var Movie = require('./Movies');
 var Actor = require('./Actors');
 var Review = require('./Reviews')
+const {response} = require("express");
 
 var app = express();
 app.use(cors());
@@ -180,14 +181,16 @@ router.route('/movies/:movieparam')
 
                 if (req.query.reviews === "true"){
                 //TODO Return movie with its review
-                    var movie_with_reviews = Review.aggregate([
+                    var pipeline = [
                         {
                         $match:
                             {
-                                "movieID": movie._id
+                                movieID: movie._id
                             }
-                    }]).toArray()
-                    res.status(200).send(JSON.stringify(movie_with_reviews));
+                    }]
+                    Review.aggregate(pipeline, function(err, resp) {
+                        res.json(resp);
+                    });
                 }
                 else {
                     res.status(200).send(movie);
