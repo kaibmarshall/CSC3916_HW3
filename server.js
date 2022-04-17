@@ -186,8 +186,8 @@ router.route('/movies/:movieparam')
                             {
                                 movieID: movie._id
                             }
-                    }])
-                    res.status(200).send(movie_with_reviews);
+                    }]).toArray()
+                    res.status(200).send(JSON.stringify(movie_with_reviews));
                 }
                 else {
                     res.status(200).send(movie);
