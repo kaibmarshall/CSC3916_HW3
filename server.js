@@ -187,12 +187,7 @@ router.route('/movies/:movieparam')
                                 movieID: movie._id
                             }
                     }])
-                    movie_with_reviews.toArray((error, result) => {
-                        if(error) {
-                            return res.status(500).send(error);
-                        }
-                        res.status(200).send(result);
-                    });
+                    res.status(200).send(movie_with_reviews);
                 }
                 else {
                     res.status(200).send(movie);
