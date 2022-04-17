@@ -222,7 +222,7 @@ router.route('/movies/:movieparam')
 router.route('/reviews')
     .get(function(req, res) {
         //TODO Return all movies and their reviews
-        let movies = Movie.aggregate([
+        let pipeline =[
             {
                 $lookup:
                     {
@@ -231,8 +231,10 @@ router.route('/reviews')
                         foreignField: "movieID",
                         as: "movies._reviews"
                     }
-            }])
-        res.status(200).send(movies)
+            }]
+        Movie.aggregate(pipeline, function(err, resp) {
+            res.json(resp);
+        });
     })
     .post(authJwtController.isAuthenticated, function(req, res) {
         Movie.findOne({title:req.body.movieTitle}).exec(function ( err, movie){
