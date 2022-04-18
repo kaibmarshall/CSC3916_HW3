@@ -174,7 +174,7 @@ router.route('/movies/:movieparam')
     .get(authJwtController.isAuthenticated, function(req, res) {
         var movieParam = req.params.movieparam.replace(":", "");
         Movie.findOne({title:movieParam}).exec(function ( err, movie){
-            if (err){
+            if (err || !movie){
                 res.send(err);
             }
             else {
@@ -238,7 +238,7 @@ router.route('/reviews')
     })
     .post(authJwtController.isAuthenticated, function(req, res) {
         Movie.findOne({title:req.body.movieTitle}).exec(function ( err, movie){
-            if (err) {
+            if (err || !movie) {
                 res.send(err);
             }
             else {
