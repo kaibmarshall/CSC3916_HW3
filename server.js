@@ -189,7 +189,7 @@ router.route('/movies/:movieparam')
                             }
                     }]
                     Review.aggregate(pipeline, function(err, resp) {
-                        res.json(resp);
+                        res.json(resp, movie);
                     });
                 }
                 else {
@@ -226,10 +226,10 @@ router.route('/reviews')
             {
                 $lookup:
                     {
-                        from: "Review",
+                        from: "reviews",
                         localField: "_id",
                         foreignField: "movieID",
-                        as: "movies._reviews"
+                        as: "reviews"
                     }
             }]
         Movie.aggregate(pipeline, function(err, resp) {
