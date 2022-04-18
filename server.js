@@ -189,6 +189,9 @@ router.route('/movies/:movieparam')
                             }
                     }]
                     Review.aggregate(pipeline, function(err, resp) {
+                        if (err){
+                            res.send(err);
+                        }
                         res.json(resp, movie);
                     });
                 }
@@ -233,6 +236,9 @@ router.route('/reviews')
                     }
             }]
         Movie.aggregate(pipeline, function(err, resp) {
+            if (err){
+                res.send(err);
+            }
             res.json(resp);
         });
     })
