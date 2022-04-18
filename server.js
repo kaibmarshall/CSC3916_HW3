@@ -175,7 +175,7 @@ router.route('/movies/:movieparam')
         var movieParam = req.params.movieparam.replace(":", "");
         Movie.findOne({title:movieParam}).exec(function ( err, movie){
             if (err || !movie){
-                res.send(err);
+                res.json( {status: 404,  message: 'No movie found', headers: req.headers,  query: req.body.query} );
             }
             else {
 
@@ -239,7 +239,7 @@ router.route('/reviews')
     .post(authJwtController.isAuthenticated, function(req, res) {
         Movie.findOne({title:req.body.movieTitle}).exec(function ( err, movie){
             if (err || !movie) {
-                res.send(err);
+                res.json( {status: 404,  message: 'No movie found', headers: req.headers,  query: req.body.query} );
             }
             else {
                 var newReview = new Review();
