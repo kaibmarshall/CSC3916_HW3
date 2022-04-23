@@ -265,6 +265,9 @@ router.route('/reviews')
                     {$count: "review_count"}
                 ]
                 Movie.aggregate(pipeline, function(err, result) {
+                    if (err)
+                        return res.json(err);
+
                     res.json(result)
                 });
 
