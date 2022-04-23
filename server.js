@@ -262,7 +262,11 @@ router.route('/reviews')
                                 as: "reviews"
                             }
                     },
-                    {$count: "review_count"}
+                    { $project: {
+                            "name": 1,
+                            "reviews": 1,
+                            "reviewCount": { "$size": "reviews" }
+                        }}
                 ]
                 Movie.aggregate(pipeline, function(err, result) {
                     if (err)
