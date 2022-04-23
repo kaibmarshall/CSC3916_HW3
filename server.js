@@ -259,8 +259,10 @@ router.route('/reviews')
                                     movieID: movie._id
                                 }
                         },
-                        {$group: {"review_sum": {$sum: "$rating"}}},
-                        // {
+                        {$group: {_id: '', "review_sum": {$sum: "$rating"}}},
+                        {$project: {_id: 0, "review_sum": 'review_sum'}}
+
+                // {
                         //     $match:
                         //         {
                         //             movieID: movie._id
