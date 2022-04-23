@@ -251,28 +251,18 @@ router.route('/reviews')
                 newReview.rating = req.body.rating;
                 newReview.movieID = movie._id;
 
-                let pipeline =
-                [
-                    {
-                        $lookup:
-                            {
-                                from: "reviews",
-                                localField: "_id",
-                                foreignField: "movieID",
-                                as: "reviews"
-                            }
-                    },
-                    { $project: {
-                            "name": 1,
-                            "reviews": 1,
-                            "reviewCount": { "$size": "reviews" }
-                        }}
-                ]
-                Movie.aggregate(pipeline, function(err, result) {
-                    if (err)
-                        return res.json(err);
-
-                    res.json(result)
+                var pipeline =
+                    [
+                        {
+                            $match:
+                                {
+                                    movieID: movie._id
+                                }
+                        },
+                        {$count : "review_total"}
+                    ]
+                Review.aggregate(pipeline, function(err, resp) {
+                    res.json(resp);
                 });
 
                 newReview.save(function(err){
