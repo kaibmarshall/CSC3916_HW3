@@ -260,7 +260,7 @@ router.route('/reviews')
                                 }
                         },
                         {$group: {_id: '', "review_sum": {$sum: "$rating"}}},
-                        {$project: {_id: 0, "review_sum": 'review_sum'}}
+                        {$project: {_id: 0, "review_sum": '$review_sum'}}
 
                 // {
                         //     $match:
