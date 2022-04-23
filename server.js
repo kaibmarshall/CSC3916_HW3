@@ -265,11 +265,11 @@ router.route('/reviews')
                     res.json(resp);
                 });
 
-                newReview.save(function(err){
-                    if (err)
-                        return res.json(err);
-                })
-                res.json({success: true, msg: 'Successfully created new review.'});
+                // newReview.save(function(err){
+                //     if (err)
+                //         return res.json(err);
+                // })
+                // res.json({success: true, msg: 'Successfully created new review.'});
             }
 
         })
