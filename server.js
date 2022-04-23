@@ -259,7 +259,13 @@ router.route('/reviews')
                                     movieID: movie._id
                                 }
                         },
-                        {$group: {review_sum: {$sum: "$rating"}}},
+                        {$group: {"review_sum": {$sum: "$rating"}}},
+                        {
+                            $match:
+                                {
+                                    movieID: movie._id
+                                }
+                        },
                         {$count : "num_of_reviews"},
                     ]
                 Review.aggregate(pipeline, function(err, result) {
