@@ -132,9 +132,11 @@ router.route('/movies')
         actorNew3.characterName = req.body.actor3.characterName;
 
         movieNew.title = req.body.title;
-        movieNew.year = req.body.year;
+        movieNew.releaseDate = req.body.releaseDate;
         movieNew.genre = req.body.genre;
         movieNew.actors = actorArray;
+        movieNew.imageUrl = req.body.imageUrl
+        movieNew.avgRating = 0
 
         movieNew.save(function(err){
             if (err)
@@ -248,6 +250,26 @@ router.route('/reviews')
                 newReview.comment = req.body.comment;
                 newReview.rating = req.body.rating;
                 newReview.movieID = movie._id;
+
+                let pipeline =
+                [
+                    {
+                        $lookup:
+                            {
+                                from: "reviews",
+                                localField: "_id",
+                                foreignField: "movieID",
+                                as: "reviews"
+                            }
+                    },
+                    {$count: "review_count"},
+                    {$project: {
+                        "review_total" : {$sum:"$reviews.rating"}
+                        }}
+                ]
+                Movie.aggregate(pipeline, function(err, result) {
+                    res.json(result)
+                });
 
                 newReview.save(function(err){
                     if (err)

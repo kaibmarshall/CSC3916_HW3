@@ -17,9 +17,11 @@ mongoose.set('useCreateIndex', true);
 
 var MovieSchema = new Schema({
     title: String,
-    year: String,
+    releaseDate: String,
     genre: String,
-    actors: [ActorSchema]
+    actors: [ActorSchema],
+    imageUrl: String,
+    avgRating: Number
 });
 
 module.exports = mongoose.model('Movie', MovieSchema);
