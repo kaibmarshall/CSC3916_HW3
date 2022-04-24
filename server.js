@@ -267,10 +267,11 @@ router.route('/reviews')
                         {$group: {_id: '', "review_avg": {$avg: "$rating"}}},
                     ]
                 Review.aggregate(pipeline, function(err, result) {
+                    console.log(result.review_avg);
                     Movie.updateOne(
                         {title:req.body.movieTitle},
                         {$set: {"avgRating" : result.review_avg}}
-                    )
+                    );
                     res.json({success: true, msg: 'Successfully created new review.', new_movie_avg_rating: result.review_avg});
                 });
 
