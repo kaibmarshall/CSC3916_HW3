@@ -266,9 +266,6 @@ router.route('/reviews')
                     res.json(result)
                 });
 
-                var rev_avg = review_sum.review_sum / review_count.num_of_reviews
-
-
                 // newReview.save(function(err){
                 //     if (err)
                 //         return res.json(err);
