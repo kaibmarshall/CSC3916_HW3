@@ -16,6 +16,7 @@ var Movie = require('./Movies');
 var Actor = require('./Actors');
 var Review = require('./Reviews')
 const {response} = require("express");
+var mongoose = require('mongoose');
 
 var app = express();
 app.use(cors());
@@ -175,7 +176,7 @@ router.route('/movies/movieparam')
     })
     .get(authJwtController.isAuthenticated, function(req, res) {
         //var movieParam = req.params.movieparam.replace(":", "");
-        Movie.findOne({_id:movieParam}).exec(function ( err, movie){
+        Movie.findOne({_id:mongoose.Types.ObjectId(movieParam)}).exec(function ( err, movie){
             if (err || !movie){
                 res.json( {status: 404,  message: 'No movie found', headers: req.headers,  query: req.body.query} );
             }
