@@ -272,10 +272,9 @@ router.route('/reviews')
                         {_id:result[0]._id},
                         {$set: {avgRating: avg}},
                         {returnNewDocument: true},
-                        function(err, res) {
+                        function(err, res1) {
                          if (err)
                              res.send(err);
-
                         });
                     res.json({success: true, msg: 'Successfully created new review.', new_movie_avg_rating: avg});
                 });
