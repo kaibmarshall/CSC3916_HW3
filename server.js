@@ -267,6 +267,7 @@ router.route('/reviews')
                         {$group: {_id: '', "review_avg": {$avg: "$rating"}}},
                     ]
                 Review.aggregate(pipeline, function(err, result) {
+                    result = JSON.parse(result)
                     Movie.updateOne(
                         {title:req.body.movieTitle},
                         {$set: {"avgRating" : result.review_avg}}
