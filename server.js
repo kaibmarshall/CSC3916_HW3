@@ -162,9 +162,9 @@ router.route('/movies')
         res.json({success: true, msg: 'Successfully created new movie.'});
         });
 
-router.route('/movies/movieparam')
+router.route('/movies/:movieparam')
     .delete(authJwtController.isAuthenticated, function(req, res) {
-        //var movieParam = req.params.movieparam.replace(":", "");
+        var movieParam = req.params.movieparam.replace(":", "");
         Movie.findOneAndDelete({title:movieParam}).exec(function ( err){
             if (err) {
                 res.send(err);
@@ -175,7 +175,7 @@ router.route('/movies/movieparam')
         })
     })
     .get(authJwtController.isAuthenticated, function(req, res) {
-        //var movieParam = req.params.movieparam.replace(":", "");
+        var movieParam = req.params.movieparam.replace(":", "");
         Movie.findOne({_id:mongoose.Types.ObjectId(movieParam)}).exec(function ( err, movie){
             if (err || !movie){
                 res.json( {status: 404,  message: 'No movie found', headers: req.headers,  query: req.body.query} );
