@@ -268,7 +268,7 @@ router.route('/reviews')
                     ]
                 Review.aggregate(pipeline, function(err, result) {
                     console.log(result[0].review_avg);
-                    Movie.updateOne(
+                    Movie.findOneAndUpdate(
                         {title:req.body.movieTitle},
                         {$set: {"avgRating" : result[0].review_avg}}
                     );
