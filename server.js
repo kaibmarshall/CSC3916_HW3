@@ -269,9 +269,9 @@ router.route('/reviews')
                 Review.aggregate(pipeline, function(err, result) {
                     Movie.updateOne(
                         {title:req.body.movieTitle},
-                        {$set: {"avgRating" : result.body.review_avg}}
+                        {$set: {"avgRating" : result.review_avg}}
                     )
-                    res.json({success: true, msg: 'Successfully created new review.', new_movie_avg_rating: result.body.review_avg});
+                    res.json({success: true, msg: 'Successfully created new review.', new_movie_avg_rating: result.review_avg});
                 });
 
 
