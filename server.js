@@ -251,6 +251,11 @@ router.route('/reviews')
                 newReview.rating = req.body.rating;
                 newReview.movieID = movie._id;
 
+                newReview.save(function(err){
+                    if (err)
+                        return res.json(err);
+                })
+
                 var pipeline =
                     [
                         {
@@ -260,17 +265,16 @@ router.route('/reviews')
                                 }
                         },
                         {$group: {_id: '', "review_avg": {$avg: "$rating"}}},
-                        // {$project: {_id: 0, "review_sum": '$review_sum'}}
                     ]
                 Review.aggregate(pipeline, function(err, result) {
-                    res.json(result)
+                    movie.avgRating = result.review_avg
+                    movie.save(function(err){
+                        if (err)
+                            return res.json(err);
+                    })
                 });
 
-                // newReview.save(function(err){
-                //     if (err)
-                //         return res.json(err);
-                // })
-                // res.json({success: true, msg: 'Successfully created new review.'});
+                res.json({success: true, msg: 'Successfully created new review.'});
             }
 
         })
