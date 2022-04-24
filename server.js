@@ -270,7 +270,7 @@ router.route('/reviews')
                     console.log(result[0].review_avg);
                     Movie.findOneAndUpdate(
                         {title:req.body.movieTitle},
-                        {$set: {"avgRating" : result[0].review_avg}}
+                        {$set: {avgRating: result[0].review_avg}}
                     );
                     res.json({success: true, msg: 'Successfully created new review.', new_movie_avg_rating: result[0].review_avg});
                 });
