@@ -109,7 +109,7 @@ router.route('/movies')
         }
     )
     .get(authJwtController.isAuthenticated,function(req, res) {
-            Movie.find({}).sort({avgRating:1}).exec((err, movies) => {
+            Movie.find({}).sort({avgRating:-1}).exec((err, movies) => {
             if (err) throw err;
             res.status(200).send(movies)
         });
