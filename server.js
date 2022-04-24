@@ -272,9 +272,10 @@ router.route('/reviews')
                         if (err)
                             return res.json(err);
                     })
+                    res.json({success: true, msg: 'Successfully created new review.', new_movie_avg_rating: result.review_avg});
                 });
 
-                res.json({success: true, msg: 'Successfully created new review.'});
+
             }
 
         })
