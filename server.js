@@ -192,8 +192,8 @@ router.route('/movies/:movieparam')
                             }
                     }]
                     Review.aggregate(pipeline, function(err, resp) {
-                        movie.reviews = resp[0];
-                        res.status(200).json(movie);
+                        const movieWithReviews = {movie, resp};
+                        res.status(200).json(movieWithReviews);
                     });
                 }
                 else {
